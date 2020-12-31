@@ -9,11 +9,19 @@ class Graph:
 	nodes: List[Node]
 
 	def __init__(self):
+		"""
+		create a empty graph class
+
+		"""
 		self.nodes = []
 		self.paths = []
 		pass
 
-	def insert_node(self, node):
+	def insert_node(self, node: Node):
+		"""
+		Insert a node and its arcs in the graph
+		:type node: Node
+		"""
 		self.nodes.append(node)
 		path = []
 		for i in self.nodes:
@@ -27,6 +35,10 @@ class Graph:
 		self.paths.append(path)
 
 	def del_node(self, node):
+		"""
+		delete a Node and it arcs from the graph
+		:param node: Node or Node name
+		"""
 		node = self.find_node(node)
 		index = self.nodes.index(node)
 		self.paths.pop(index)
@@ -35,6 +47,11 @@ class Graph:
 		self.nodes.remove(node)
 
 	def find_node(self, name):
+		"""
+		Search in graph nodes the node by their name
+		:param name: Node or Node name
+		:return: Node
+		"""
 		if name.__class__ != str:
 			return name
 		for i in self.nodes:
@@ -42,18 +59,31 @@ class Graph:
 				return i
 
 	def new_arc(self, start_node, end_node):
+		"""
+		Create a new arc
+		:param start_node: start Node or it name
+		:param end_node: end Node or it name
+		"""
 		start_node = self.find_node(start_node)
 		end_node = self.find_node(end_node)
 		start_node.new_arc(end_node)
 		self.paths[self.nodes.index(start_node)][self.nodes.index(end_node)] = 1
 
 	def del_arc(self, start_node, end_node):
+		"""
+		Delete a arc
+		:param start_node:
+		:param end_node:
+		"""
 		start_node = self.find_node(start_node)
 		end_node = self.find_node(end_node)
 		start_node.arcs.remove(end_node)
 		self.paths[self.nodes.index(start_node)][self.nodes.index(end_node)] = 0
 
 	def update_graph_arcs(self):
+		"""
+		Update the adjacency matrix with Nodes arc list
+		"""
 		paths = []
 		for i in self.nodes:
 			path = []
@@ -66,6 +96,9 @@ class Graph:
 		self.paths = paths
 
 	def update_node_arcs(self):
+		"""
+		Update the Nodes arcs with the adjacency matrix
+		"""
 		for i in self.nodes:
 			i.arcs = []
 		a = 0
@@ -73,13 +106,17 @@ class Graph:
 			b = 0
 			while b < len(self.paths):
 				if self.paths[a][b] == 1:
-					self.nodes[a].arcs.append(self.nodes[b])
+					self.nodes[a].new_arc(self.nodes[b])
 				b += 1
 			a += 1
 
 	def graph_dump(self, save: str):
+		"""
+		Generate a .graph file where the graph is saved
+		:param save: name for the save file
+		:return: the save file text
+		"""
 		text = "\n"
-
 		for i in self.nodes:
 			node = Node()
 			node.name = i.name
@@ -97,6 +134,11 @@ class Graph:
 		return text
 
 	def graph_load(self, save: str):
+		"""
+		Load a .graph file in this object ¡Do not create a new one by itself!
+		:param save: the addrres or text of the save file
+		:return:
+		"""
 		if save[-7:-1] != ".graph":
 			save = open(save).read().splitlines()
 		elif save.find("@{"):
@@ -128,21 +170,27 @@ class Graph:
 ##
 
 graph = Graph()
+
 node1 = Node()
 node1.set_name("one")
+graph.insert_node(node1)
+
 node2 = Node()
 node2.set_name("two")
+graph.insert_node(node2)
+
 node3 = Node()
 node3.set_name("Three")
+graph.insert_node(node3)
+
 node4 = Node()
 node4.set_name("fourth")
+graph.insert_node(node4)
+
 node5 = Node()
 node5.set_name("five")
-graph.insert_node(node1)
-graph.insert_node(node2)
-graph.insert_node(node3)
-graph.insert_node(node4)
 graph.insert_node(node5)
+
 graph.new_arc(node1, "two")
 graph.new_arc("two", "one")
 graph.del_arc("two", "one")
@@ -151,6 +199,7 @@ graph.new_arc(node3, "one")
 graph.new_arc(node3, node2)
 graph.new_arc(node5, "one")
 graph.new_arc(node5, "five")
+
 print(graph.__dict__)
 print(graph.graph_dump("graph one"))
 graph.graph_load("saves/graph one.graph")
