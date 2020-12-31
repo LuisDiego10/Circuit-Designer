@@ -13,7 +13,7 @@ from Display import *
 from graph import *
 
 
-def update_nodes(node_group, displayed_graph: Graph):
+def update_nodes(node_group: Group, displayed_graph: Graph):
 	node_group.empty()
 	for node in displayed_graph.nodes:
 		node_display = Display.Node_visualization(node)
@@ -77,13 +77,14 @@ graph = Graph()
 node1 = Node()
 node1.set_name("one")
 node1.type = 0
-node1.position = (250, 11)
+node1.position = (250, 41)
 graph.insert_node(node1)
 
 node2 = Node()
 node2.set_name("two")
 node2.type = 1
 node2.position = (120, 452)
+node2.rotation = 1
 graph.insert_node(node2)
 
 run(graph)
