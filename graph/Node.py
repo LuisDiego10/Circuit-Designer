@@ -21,7 +21,7 @@ class Node:
 	def set_value(self, new_value):
 		self.value = new_value
 
-	def new_arc(self, node: Node):
+	def new_arc(self, node):
 		"""
 		Create new arcs
 		if the arc already exist ignore the creation

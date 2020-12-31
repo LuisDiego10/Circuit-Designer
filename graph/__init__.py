@@ -165,50 +165,50 @@ class Graph:
 		self.update_graph_arcs()
 
 
-##
-"""TEST GRAPH"""
-##
-
-graph = Graph()
-
-node1 = Node()
-node1.set_name("one")
-graph.insert_node(node1)
-
-node2 = Node()
-node2.set_name("two")
-graph.insert_node(node2)
-
-node3 = Node()
-node3.set_name("Three")
-graph.insert_node(node3)
-
-node4 = Node()
-node4.set_name("fourth")
-graph.insert_node(node4)
-
-node5 = Node()
-node5.set_name("five")
-graph.insert_node(node5)
-
-graph.new_arc(node1, "two")
-graph.new_arc("two", "one")
-graph.del_arc("two", "one")
-graph.new_arc("two", "one")
-graph.new_arc(node3, "one")
-graph.new_arc(node3, node2)
-graph.new_arc(node5, "one")
-graph.new_arc(node5, "five")
-
-print(graph.__dict__)
-print(graph.graph_dump("graph one"))
-graph.graph_load("saves/graph one.graph")
-print(graph.graph_dump("graph one"))
-
-##
-# one connect to two
-# two connect to one
-# three connect to one and two
-# fourth is not connect to any
-# five is connect to one and five
-##
+# ##
+# """TEST GRAPH"""
+# ##
+#
+# graph = Graph()
+#
+# node1 = Node()
+# node1.set_name("one")
+# graph.insert_node(node1)
+#
+# node2 = Node()
+# node2.set_name("two")
+# graph.insert_node(node2)
+#
+# node3 = Node()
+# node3.set_name("Three")
+# graph.insert_node(node3)
+#
+# node4 = Node()
+# node4.set_name("fourth")
+# graph.insert_node(node4)
+#
+# node5 = Node()
+# node5.set_name("five")
+# graph.insert_node(node5)
+#
+# graph.new_arc(node1, "two")
+# graph.new_arc("two", "one")
+# graph.del_arc("two", "one")
+# graph.new_arc("two", "one")
+# graph.new_arc(node3, "one")
+# graph.new_arc(node3, node2)
+# graph.new_arc(node5, "one")
+# graph.new_arc(node5, "five")
+#
+# print(graph.__dict__)
+# print(graph.graph_dump("graph one"))
+# graph.graph_load("saves/graph one.graph")
+# print(graph.graph_dump("graph one"))
+#
+# ##
+# # one connect to two
+# # two connect to one
+# # three connect to one and two
+# # fourth is not connect to any
+# # five is connect to one and five
+# ##
