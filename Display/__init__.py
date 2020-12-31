@@ -33,12 +33,11 @@ class Button(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.center = (x, y)
 
-	def update(self, screen, cursor):
+	def update(self):
 		if self.image == self.imgselec:
 			self.image = self.imgnor
 		else:
 			self.image = self.imgselec
-		screen.blit(self.image, self.rect)
 
 
 # Create button

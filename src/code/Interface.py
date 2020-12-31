@@ -43,10 +43,8 @@ def run(displayed_graph: Graph):
 
 		# show nodes and buttons
 		nodes.draw(screen)
-		print(nodes)
 		buttons.draw(screen)
 		selected.draw(screen)
-		print(selected)
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -56,7 +54,9 @@ def run(displayed_graph: Graph):
 				# check for left click
 				if event.button == 1:
 					# check for button selection
-
+					if simulation_button.rect.collidepoint(mouse_x, mouse_y):
+						simulation_button.update()
+						continue
 					# check for Node selection
 					for node in nodes:
 						if node.rect.collidepoint(mouse_x, mouse_y):
