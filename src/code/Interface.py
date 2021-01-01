@@ -1,3 +1,7 @@
+import threading
+import tkinter
+from tkinter import *
+
 import pygame
 from pygame.sprite import Group
 
@@ -24,15 +28,19 @@ def update_nodes(node_group: Group, displayed_graph: Graph):
 def run(displayed_graph: Graph):
 	done = False
 	clock = pygame.time.Clock()
+	node_edit_mode = Edit_node_screen(graph)
+	node_edit_mode.start()
 
 	nodes: Group = pygame.sprite.Group()
+	nodes = update_nodes(nodes, graph)
 	buttons: Group = pygame.sprite.Group()
 	cable = pygame.sprite.Group()
 	selected = pygame.sprite.Group()
+
 	simulation_button = Button(Display.simulation, Display.simulation_selec, 1055, 725, buttons)
-	nodes = update_nodes(nodes, graph)
 
 	while not done:
+
 		screen.blit(background, [0, 0])
 
 		# update mouse position
@@ -66,10 +74,18 @@ def run(displayed_graph: Graph):
 							else:
 								node.update()
 								selected.add(node)
+				# check for right click
+				elif event.button == 3:
+					for node in nodes:
+						if node.rect.collidepoint(mouse_x, mouse_y):
+							node_edit_mode.node(node)
+					continue
 
 		pygame.display.flip()
-	clock.tick(60)
+		clock.tick(60)
 	pygame.quit()
+	node_edit_mode.main_window.quit()
+	node_edit_mode.stop()
 
 
 graph = Graph()
@@ -87,4 +103,7 @@ node2.position = (120, 452)
 node2.rotation = 1
 graph.insert_node(node2)
 
+graph.new_arc(node2, node1)
+
 run(graph)
+exit()
