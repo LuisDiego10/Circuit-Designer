@@ -57,6 +57,8 @@ class Graph:
 		for i in self.nodes:
 			if i.name == name:
 				return i
+		else:
+			return -1
 
 	def new_arc(self, start_node, end_node):
 		"""
@@ -66,6 +68,8 @@ class Graph:
 		"""
 		start_node = self.find_node(start_node)
 		end_node = self.find_node(end_node)
+		if -1 == start_node or -1 == end_node:
+			return
 		start_node.new_arc(end_node)
 		self.paths[self.nodes.index(start_node)][self.nodes.index(end_node)] = 1
 
@@ -164,6 +168,11 @@ class Graph:
 		self.update_node_arcs()
 		self.update_graph_arcs()
 
+	def sort(self):
+		"""
+place holder for sort algorithms
+		"""
+		pass
 
 # ##
 # """TEST GRAPH"""

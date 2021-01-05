@@ -56,10 +56,17 @@ class Edit_node_screen(threading.Thread):
 
 		self.graph = graph
 
-	def edit_node(self, node, value, name, arcs, graph):
+	def edit_node(self, node, name, value, arcs: str, graph, screen=0):
 		node.set_name(name)
 		node.set_value(value)
 		node.arcs = []
+		arc = arcs.split(",")
+		for a in arc:
+			graph.new_arc(node, a)
+		graph.update_graph_arcs()
+		if screen != 0:
+			screen.destroy()
+		self.refresh()
 		pass
 
 	def run(self) -> None:
@@ -70,9 +77,7 @@ class Edit_node_screen(threading.Thread):
 		self.main_window.bind("<Map>", self.main_window.focus_force())
 		self.main_window.geometry("400x250")
 		self.main_window.title("Nodes")
-		for node in self.graph.nodes:
-			tkinter.Button(text=node.name, height="2", width="30",
-			               command=partial(self.node, node)).pack()
+		self.refresh()
 
 		self.main_window.mainloop()
 
@@ -101,22 +106,32 @@ class Edit_node_screen(threading.Thread):
 		Label(window, text="value:", font=("Calibri", 13)).pack()
 		value_entry.pack()
 		arcs = StringVar()
-		arcs_entry = Entry(window, textvariable=value)
+		arcs_entry = Entry(window, textvariable=arcs)
 		text = ""
-		for arc in node.arcs:
-			text = text + "," + arc.name
+		if len(node.arcs) != 0:
+			for arc in node.arcs:
+				text = text + arc.name + ","
 		arcs.set(text)
 		Label(window, text="arcs:", font=("Calibri", 13)).pack()
 		arcs_entry.pack()
 		tkinter.Button(window, text="Apply", height="2", width="30", bg=tabs_color,
 		               command=lambda: self.edit_node(node, name_entry.get(), value_entry.get(), arcs_entry.get(),
-		                                              self.graph)).pack()
+		                                              self.graph, window)).pack()
 		tkinter.Button(window, text="Close", height="2", width="30", bg=tabs_color,
 		               command=lambda: window.destroy()).pack()
 		window.focus_force()
 
 	def stop(self):
 		self.main_window.destroy()
+
+	def refresh(self):
+		for child in self.main_window.winfo_children():
+			child.destroy()
+		self.graph.sort()
+		for node in self.graph.nodes:
+			tkinter.Button(text=node.name, height="2", width="30",
+			               command=partial(self.node, node)).pack()
+
 
 
 # Create button
