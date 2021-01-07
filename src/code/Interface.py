@@ -39,7 +39,10 @@ def run(displayed_graph: Graph):
 
 	simulation_button = Button(Display.simulation, Display.simulation_selec, 1065, 725, buttons)
 	resistance_button_edit = Button(Display.resistance_edit, Display.resistance_select_edit, 1065, 550, buttons)
-	battery_button_edit= Button(Display.battery_edit, Display.battery_select_edit, 1065, 500, buttons)
+	battery_button_edit = Button(Display.battery_edit, Display.battery_select_edit, 1065, 500, buttons)
+	import_button_edit = Button(Display.import_edit, Display.import_select_edit, 1065, 500, buttons)
+	export_button_edit = Button(Display.export_edit, Display.export_select_edit, 1065, 500, buttons)
+
 	while not done:
 
 		screen.blit(background, [0, 0])
