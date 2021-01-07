@@ -156,9 +156,9 @@ class Edit_node_screen(threading.Thread):
 
 # Create button
 simulation = pygame.image.load("resources/simulation.png")
-
+simulation = pygame.transform.scale(simulation, (150, 70))
 simulation_selec = pygame.image.load("resources/simulation_Selection.png")
-
+simulation_selec = pygame.transform.scale(simulation_selec, (150, 70))
 # Images
 background = pygame.image.load("resources/background.png").convert()
 
@@ -171,3 +171,13 @@ battery = pygame.image.load("resources/battery.png").convert()
 battery = pygame.transform.scale(battery, (80, 80))
 battery_select = pygame.image.load("resources/battery_Selection.png").convert()
 battery_select = pygame.transform.scale(battery_select, (80, 80))
+
+resistance_edit = pygame.image.load("resources/resistance.png").convert()
+resistance_edit = pygame.transform.scale(resistance_edit, (100, 60))
+resistance_select_edit = pygame.image.load("resources/resistance_Selection_edit.png").convert()
+resistance_select_edit = pygame.transform.scale(resistance_select_edit, (100, 60))
+
+battery_edit = pygame.image.load("resources/battery.png").convert()
+battery_edit = pygame.transform.scale(battery_edit, (100, 60))
+battery_select_edit = pygame.image.load("resources/battery_Selection_edit.png").convert()
+battery_select_edit = pygame.transform.scale(battery_select_edit, (100, 60))

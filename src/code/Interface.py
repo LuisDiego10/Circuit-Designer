@@ -37,8 +37,9 @@ def run(displayed_graph: Graph):
 	buttons: Group = pygame.sprite.Group()
 	selected = pygame.sprite.Group()
 
-	simulation_button = Button(Display.simulation, Display.simulation_selec, 1055, 725, buttons)
-
+	simulation_button = Button(Display.simulation, Display.simulation_selec, 1065, 725, buttons)
+	resistance_button_edit = Button(Display.resistance_edit, Display.resistance_select_edit, 1065, 550, buttons)
+	battery_button_edit= Button(Display.battery_edit, Display.battery_select_edit, 1065, 500, buttons)
 	while not done:
 
 		screen.blit(background, [0, 0])
@@ -69,6 +70,15 @@ def run(displayed_graph: Graph):
 					if simulation_button.rect.collidepoint(mouse_x, mouse_y):
 						simulation_button.update()
 						continue
+
+					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y):
+						resistance_button_edit.update()
+						continue
+
+					if battery_button_edit.rect.collidepoint(mouse_x, mouse_y):
+						battery_button_edit.update()
+						continue
+
 					# check for Node selection
 					for node in nodes:
 						if node.rect.collidepoint(mouse_x, mouse_y):
