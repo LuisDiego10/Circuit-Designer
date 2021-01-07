@@ -5,11 +5,14 @@ from tkinter import *
 import pygame
 import threading
 
+from Display.Wire import Wire
+
 
 class Node_visualization(pygame.sprite.Sprite):
-	def __init__(self, node, *groups):
+	def __init__(self, node, *groups, wire, screen):
 		super().__init__(*groups)
 		self.node = node
+		self.wire = Wire(screen, node, wire)
 		if node.type == 0:
 			self.image = battery
 			self.image_normal = battery
@@ -51,12 +54,12 @@ class Button(pygame.sprite.Sprite):
 
 
 class Edit_node_screen(threading.Thread):
-	def __init__(self, graph):
+	def __init__(self, graph, nodes):
 		super().__init__()
-
 		self.graph = graph
+		self.nodes = nodes
 
-	def edit_node(self, node, name, value, arcs: str, graph, screen=0):
+	def edit_node(self, node, name, value, arcs: str, graph, screen=0, node_vis=None):
 		node.set_name(name)
 		node.set_value(value)
 		node.arcs = []
@@ -67,6 +70,8 @@ class Edit_node_screen(threading.Thread):
 		if screen != 0:
 			screen.destroy()
 		self.refresh()
+		if node_vis is not None:
+			node_vis.wire.update_position()
 		pass
 
 	def run(self) -> None:
@@ -75,7 +80,7 @@ class Edit_node_screen(threading.Thread):
 		# self.main_window.overrideredirect(True)
 		self.main_window.bind("<Unmap>", self.main_window.focus_force())
 		self.main_window.bind("<Map>", self.main_window.focus_force())
-		self.main_window.geometry("400x250")
+		self.main_window.geometry("400x300")
 		self.main_window.title("Nodes")
 		self.refresh()
 
@@ -87,7 +92,14 @@ class Edit_node_screen(threading.Thread):
 
 	def node(self, node):
 		if node.__class__ == Node_visualization:
+			visualizator = node
 			node = node.node
+		else:
+			node = node
+			for a in self.nodes:
+				if a.node == node:
+					visualizator = a
+					break
 		tabs_color = "DarkGrey"
 		window = Toplevel(self.main_window)
 		window.protocol("WM_DELETE_WINDOW", (lambda: self.close_top(window)))
@@ -116,7 +128,7 @@ class Edit_node_screen(threading.Thread):
 		arcs_entry.pack()
 		tkinter.Button(window, text="Apply", height="2", width="30", bg=tabs_color,
 		               command=lambda: self.edit_node(node, name_entry.get(), value_entry.get(), arcs_entry.get(),
-		                                              self.graph, window)).pack()
+		                                              self.graph, window, visualizator)).pack()
 		tkinter.Button(window, text="Close", height="2", width="30", bg=tabs_color,
 		               command=lambda: window.destroy()).pack()
 		window.focus_force()
@@ -128,10 +140,18 @@ class Edit_node_screen(threading.Thread):
 		for child in self.main_window.winfo_children():
 			child.destroy()
 		self.graph.sort()
+		row = 1
+		tkinter.Label(text="UP").grid(column=1, row=0)
+		for node in self.graph.sorted_up:
+			tkinter.Button(text=node.name, height="2", width="30",
+			               command=partial(self.node, node)).grid(column=1, row=row)
+			row += 1
+		row = 1
+		tkinter.Label(text="DOWN").grid(column=3, row=0)
 		for node in self.graph.nodes:
 			tkinter.Button(text=node.name, height="2", width="30",
-			               command=partial(self.node, node)).pack()
-
+			               command=partial(self.node, node)).grid(column=3, row=row)
+			row += 1
 
 
 # Create button

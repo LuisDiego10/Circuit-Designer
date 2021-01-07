@@ -17,10 +17,10 @@ from Display import *
 from graph import *
 
 
-def update_nodes(node_group: Group, displayed_graph: Graph):
+def update_nodes(node_group: Group, displayed_graph: Graph, wire: Group):
 	node_group.empty()
 	for node in displayed_graph.nodes:
-		node_display = Display.Node_visualization(node)
+		node_display = Display.Node_visualization(node, wire=wire, screen=screen)
 		node_group.add(node_display)
 	return node_group
 
@@ -28,13 +28,13 @@ def update_nodes(node_group: Group, displayed_graph: Graph):
 def run(displayed_graph: Graph):
 	done = False
 	clock = pygame.time.Clock()
-	node_edit_mode = Edit_node_screen(graph)
+	nodes: Group = pygame.sprite.Group()
+	node_edit_mode = Edit_node_screen(graph,nodes)
 	node_edit_mode.start()
 
-	nodes: Group = pygame.sprite.Group()
-	nodes = update_nodes(nodes, graph)
-	buttons: Group = pygame.sprite.Group()
 	cable = pygame.sprite.Group()
+	nodes = update_nodes(nodes, graph, cable)
+	buttons: Group = pygame.sprite.Group()
 	selected = pygame.sprite.Group()
 
 	simulation_button = Button(Display.simulation, Display.simulation_selec, 1055, 725, buttons)
@@ -53,6 +53,10 @@ def run(displayed_graph: Graph):
 		nodes.draw(screen)
 		buttons.draw(screen)
 		selected.draw(screen)
+		cable.draw(screen)
+		for a in nodes:
+			a.wire.update()
+			a.wire.draw()
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -103,7 +107,16 @@ node2.position = (120, 452)
 node2.rotation = 1
 graph.insert_node(node2)
 
+node3 = Node()
+node3.set_name("Three")
+node3.type = 1
+node3.position = (320, 452)
+node3.rotation = 0
+graph.insert_node(node3)
+
 graph.new_arc(node2, node1)
+graph.new_arc(node3, node1)
+graph.new_arc(node3, node2)
 
 run(graph)
 exit()

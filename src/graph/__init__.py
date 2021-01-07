@@ -15,6 +15,8 @@ class Graph:
 		"""
 		self.nodes = []
 		self.paths = []
+		self.sorted_up = []
+		self.sorted_down = []
 		pass
 
 	def insert_node(self, node: Node):
@@ -26,7 +28,6 @@ class Graph:
 		path = []
 		for i in self.nodes:
 			if i in node.arcs:
-
 				path.append(1)
 			else:
 				path.append(0)
@@ -81,6 +82,8 @@ class Graph:
 		"""
 		start_node = self.find_node(start_node)
 		end_node = self.find_node(end_node)
+		if -1 == start_node or -1 == end_node:
+			return
 		start_node.arcs.remove(end_node)
 		self.paths[self.nodes.index(start_node)][self.nodes.index(end_node)] = 0
 
@@ -172,11 +175,36 @@ class Graph:
 		"""
 place holder for sort algorithms
 		"""
+		list_A = self.nodes
+		list_B = self.nodes
+		self.sorted_up = self.quicksort(list_A)
 		pass
 
-# ##
-# """TEST GRAPH"""
-# ##
+	def quicksort(self, list):
+		print("Lista: ", list)
+		if len(list) == 1 or len(list) == 0:
+			return list
+		else:
+			pivot = list[0].name
+			i = 0  # El i es utilizado como contador para cuando aparezca un elemento menor al pivot
+			# Recorre la lista
+			for j in range(len(list) - 1):
+				if list[j + 1].name < pivot:
+					list[j + 1], list[i + 1] = list[i + 1], list[j + 1]
+					i += 1
+
+			list[0], list[i] = list[i], list[0]  # Intercambiar el pivot por el último elemento menor encontrado
+			# Dividir la lista
+			firts = self.quicksort(list[:i])
+			print("Firts", firts)
+			second = self.quicksort(list[i + 1:])
+			print("Second", second)
+			firts.append(list[i])
+
+		return firts + second
+##
+"""TEST GRAPH"""
+##
 #
 # graph = Graph()
 #
