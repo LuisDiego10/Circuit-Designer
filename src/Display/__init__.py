@@ -52,6 +52,11 @@ class Button(pygame.sprite.Sprite):
 		else:
 			self.image = self.imgselec
 
+	def move(self,x,y):
+		self.rect.x=x
+		self.rect.y=y
+
+
 
 class Edit_node_screen(threading.Thread):
 	def __init__(self, graph, nodes):

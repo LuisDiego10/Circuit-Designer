@@ -76,6 +76,8 @@ def run(displayed_graph: Graph):
 
 					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y):
 						resistance_button_edit.update()
+						if resistance_button_edit.image == resistance_select_edit and resistance_button_edit.rect.collidepoint(mouse_x, mouse_y):
+							resistance_button_edit.move(mouse_x,mouse_y)
 						continue
 
 					if battery_button_edit.rect.collidepoint(mouse_x, mouse_y):
