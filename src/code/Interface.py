@@ -38,10 +38,10 @@ def run(displayed_graph: Graph):
 	selected = pygame.sprite.Group()
 
 	simulation_button = Button(Display.simulation, Display.simulation_selec, 1065, 725, buttons)
-	resistance_button_edit = Button(Display.resistance_edit, Display.resistance_select_edit, 1065, 550, buttons)
-	battery_button_edit = Button(Display.battery_edit, Display.battery_select_edit, 1065, 500, buttons)
-	import_button_edit = Button(Display.import_edit, Display.import_select_edit, 1065, 500, buttons)
-	export_button_edit = Button(Display.export_edit, Display.export_select_edit, 1065, 500, buttons)
+	resistance_button_edit = Button(Display.resistance_edit, Display.resistance_select_edit, 1065, 350, buttons)
+	battery_button_edit = Button(Display.battery_edit, Display.battery_select_edit, 1065, 470, buttons)
+	import_button_edit = Button(Display.import_edit, Display.import_edit, 1010,100, buttons)
+	export_button_edit = Button(Display.export_edit, Display.export_edit, 1125, 100, buttons)
 
 	while not done:
 
