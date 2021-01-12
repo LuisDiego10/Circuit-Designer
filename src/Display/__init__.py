@@ -5,7 +5,7 @@ from tkinter import *
 import pygame
 import threading
 
-from Display.Wire import Wire
+from Display.Wire import *
 
 
 class Node_visualization(pygame.sprite.Sprite):
@@ -21,6 +21,7 @@ class Node_visualization(pygame.sprite.Sprite):
 			self.image = resistance
 			self.image_normal = resistance
 			self.image_select = resistance_select
+
 		if node.rotation > 0:
 			self.image = pygame.transform.rotate(self.image, 90 * node.rotation)
 			self.image_select = pygame.transform.rotate(self.image_select, 90 * node.rotation)
@@ -35,6 +36,15 @@ class Node_visualization(pygame.sprite.Sprite):
 		else:
 			self.image = self.image_select
 		pass
+
+	def rotate(self):
+		rect_postion = self.rect.center
+		self.node.rotation = (self.node.rotation + 1) % 4
+		self.image = pygame.transform.rotate(self.image, 90)
+		self.image_select = pygame.transform.rotate(self.image_select, 90)
+		self.image_normal = pygame.transform.rotate(self.image_normal, 90)
+		self.rect = self.image.get_rect()
+		self.rect.center = rect_postion
 
 
 class Button(pygame.sprite.Sprite):
@@ -52,10 +62,9 @@ class Button(pygame.sprite.Sprite):
 		else:
 			self.image = self.imgselec
 
-	def move(self,x,y):
-		self.rect.x=x
-		self.rect.y=y
-
+	def move(self, x, y):
+		self.rect.x = x
+		self.rect.y = y
 
 
 class Edit_node_screen(threading.Thread):
@@ -186,13 +195,12 @@ battery_edit = pygame.image.load("resources/battery.png").convert()
 battery_edit = pygame.transform.scale(battery_edit, (100, 60))
 battery_select_edit = pygame.image.load("resources/battery_Selection_edit.png").convert()
 battery_select_edit = pygame.transform.scale(battery_select_edit, (100, 60))
-battery_select_edit.set_colorkey((0,0,0))
+battery_select_edit.set_colorkey((0, 0, 0))
 
 import_edit = pygame.image.load("resources/Import.png").convert()
 import_edit = pygame.transform.scale(import_edit, (100, 60))
-import_edit.set_colorkey((0,0,0))
+import_edit.set_colorkey((0, 0, 0))
 
 export_edit = pygame.image.load("resources/Export.png").convert()
 export_edit = pygame.transform.scale(export_edit, (100, 60))
-export_edit.set_colorkey((0,0,0))
-
+export_edit.set_colorkey((0, 0, 0))

@@ -29,7 +29,7 @@ def run(displayed_graph: Graph):
 	done = False
 	clock = pygame.time.Clock()
 	nodes: Group = pygame.sprite.Group()
-	node_edit_mode = Edit_node_screen(graph,nodes)
+	node_edit_mode = Edit_node_screen(graph, nodes)
 	node_edit_mode.start()
 
 	cable = pygame.sprite.Group()
@@ -37,14 +37,15 @@ def run(displayed_graph: Graph):
 	buttons: Group = pygame.sprite.Group()
 	selected = pygame.sprite.Group()
 
-	simulation_button = Button(Display.simulation, Display.simulation_selec, 1065, 725, buttons)
-	resistance_button_edit = Button(Display.resistance_edit, Display.resistance_select_edit, 1065, 350, buttons)
-	battery_button_edit = Button(Display.battery_edit, Display.battery_select_edit, 1065, 470, buttons)
-	import_button_edit = Button(Display.import_edit, Display.import_edit, 1010,100, buttons)
-	export_button_edit = Button(Display.export_edit, Display.export_edit, 1125, 100, buttons)
+	simulation_button = Display.Button(Display.simulation, Display.simulation_selec, 1065, 725, buttons)
+	resistance_button_edit = Display.Button(Display.resistance_edit, Display.resistance_select_edit, 1065, 350, buttons)
+	battery_button_edit = Display.Button(Display.battery_edit, Display.battery_select_edit, 1065, 470, buttons)
+	import_button_edit = Display.Button(Display.import_edit, Display.import_edit, 1010, 100, buttons)
+	export_button_edit = Display.Button(Display.export_edit, Display.export_edit, 1125, 100, buttons)
+
+	old_mouse_x, old_mouse_y = (0, 0)
 
 	while not done:
-
 		screen.blit(background, [0, 0])
 
 		# update mouse position
@@ -58,8 +59,8 @@ def run(displayed_graph: Graph):
 		buttons.draw(screen)
 		selected.draw(screen)
 		cable.draw(screen)
+
 		for a in nodes:
-			a.wire.update()
 			a.wire.draw()
 
 		for event in pygame.event.get():
@@ -76,8 +77,6 @@ def run(displayed_graph: Graph):
 
 					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y):
 						resistance_button_edit.update()
-						if resistance_button_edit.image == resistance_select_edit and resistance_button_edit.rect.collidepoint(mouse_x, mouse_y):
-							resistance_button_edit.move(mouse_x,mouse_y)
 						continue
 
 					if battery_button_edit.rect.collidepoint(mouse_x, mouse_y):
@@ -87,20 +86,51 @@ def run(displayed_graph: Graph):
 					# check for Node selection
 					for node in nodes:
 						if node.rect.collidepoint(mouse_x, mouse_y):
+							if pygame.key.get_mods() == 256:
+								node.rotate()
+								continue
 							if selected.has(node):
 								node.update()
 								selected.remove(node)
 							else:
 								node.update()
 								selected.add(node)
+							continue
+
+					# check for cable selection
+					for wire in cable:
+						if wire.rect.collidepoint(mouse_x, mouse_y):
+							if selected.has(wire):
+								selected.remove(wire)
+							else:
+								selected.add(wire)
+						pass
+
 				# check for right click
 				elif event.button == 3:
+					print(cable.sprites())
+					for a in cable.sprites():
+						print(a.node)
+					print(selected.sprites())
 					for node in nodes:
 						if node.rect.collidepoint(mouse_x, mouse_y):
 							node_edit_mode.node(node)
 					continue
 
+			# move selected Nodes
+			if event.type == pygame.MOUSEMOTION:
+				if pygame.mouse.get_pressed()[0] and pygame.key.get_mods() == 64:
+					for a in selected:
+						a.rect.center = (
+							a.rect.center[0] - (old_mouse_x - mouse_x), a.rect.center[1] - (old_mouse_y - mouse_y))
+						if a.__class__ == Display.Wire_node:
+							a.wire.wires[a.wire.wires.index(a)].position = a.rect.center
+
+						else:
+							a.node.position = a.rect.center
+
 		pygame.display.flip()
+		old_mouse_x, old_mouse_y = (mouse_x, mouse_y)
 		clock.tick(60)
 	pygame.quit()
 	node_edit_mode.main_window.quit()
