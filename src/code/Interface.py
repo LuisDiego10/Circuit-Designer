@@ -25,6 +25,11 @@ def update_nodes(node_group: Group, displayed_graph: Graph, wire: Group):
 	return node_group
 
 
+def add_node(node: Node, node_group: Group, wire: Group):
+	node_display = Display.Node_visualization(node, wire=wire, screen=screen)
+	node_group.add(node_display)
+
+
 def run(displayed_graph: Graph):
 	done = False
 	clock = pygame.time.Clock()
@@ -44,6 +49,7 @@ def run(displayed_graph: Graph):
 	export_button_edit = Display.Button(Display.export_edit, Display.export_edit, 1125, 100, buttons)
 
 	old_mouse_x, old_mouse_y = (0, 0)
+	new_element: Node or None = None
 
 	while not done:
 		screen.blit(background, [0, 0])
@@ -70,18 +76,51 @@ def run(displayed_graph: Graph):
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				# check for left click
 				if event.button == 1:
+					# check for new element
+					if new_element is not None:
+						for element in selected:
+							element.update()
+						selected.empty()
+						if new_element.type == 1:
+							resistance_button_edit.update()
+						else:
+							battery_button_edit.update()
+						new_element.position = (mouse_x, mouse_y)
+						graph.insert_node(new_element)
+						add_node(new_element, nodes, cable)
+						new_element = None
+
 					# check for button selection
 					if simulation_button.rect.collidepoint(mouse_x, mouse_y):
 						simulation_button.update()
+						new_element = None
 						continue
 
 					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y):
 						resistance_button_edit.update()
+						new_element = Node()
+						new_element.type = 1
+						new_element.set_name("resistance" + str(random.randint(0, 500)))
 						continue
 
 					if battery_button_edit.rect.collidepoint(mouse_x, mouse_y):
 						battery_button_edit.update()
+						new_element = Node()
+						new_element.type = 0
+						new_element.set_name("battery" + str(random.randint(0, 500)))
 						continue
+
+					if import_button_edit.rect.collidepoint(mouse_x, mouse_y):
+						file = node_edit_mode.load()
+						graph.graph_load(file)
+
+						nodes.empty()
+						selected.empty()
+						cable.empty()
+
+						nodes = update_nodes(nodes, graph, cable)
+					if export_button_edit.rect.collidepoint(mouse_x, mouse_y):
+						graph.graph_dump("Example")
 
 					# check for Node selection
 					for node in nodes:
@@ -102,16 +141,15 @@ def run(displayed_graph: Graph):
 						if wire.rect.collidepoint(mouse_x, mouse_y):
 							if selected.has(wire):
 								selected.remove(wire)
+								wire.update()
 							else:
 								selected.add(wire)
+								wire.update()
 						pass
 
 				# check for right click
 				elif event.button == 3:
-					print(cable.sprites())
-					for a in cable.sprites():
-						print(a.node)
-					print(selected.sprites())
+					print(graph.nodes[0].__dict__)
 					for node in nodes:
 						if node.rect.collidepoint(mouse_x, mouse_y):
 							node_edit_mode.node(node)
@@ -124,7 +162,10 @@ def run(displayed_graph: Graph):
 						a.rect.center = (
 							a.rect.center[0] - (old_mouse_x - mouse_x), a.rect.center[1] - (old_mouse_y - mouse_y))
 						if a.__class__ == Display.Wire_node:
-							a.wire.wires[a.wire.wires.index(a)].position = a.rect.center
+							try:
+								a.wire.wires[a.wire.wires.index(a)].position = a.rect.center
+							except ValueError:
+								cable.remove(a)
 
 						else:
 							a.node.position = a.rect.center

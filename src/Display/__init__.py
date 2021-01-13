@@ -1,6 +1,7 @@
 import tkinter
 from functools import partial
 from tkinter import *
+from tkinter.filedialog import askopenfilename
 
 import pygame
 import threading
@@ -166,6 +167,9 @@ class Edit_node_screen(threading.Thread):
 			tkinter.Button(text=node.name, height="2", width="30",
 			               command=partial(self.node, node)).grid(column=3, row=row)
 			row += 1
+
+	def load(self):
+		return askopenfilename()
 
 
 # Create button

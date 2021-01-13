@@ -123,11 +123,15 @@ class Graph:
 		:param save: name for the save file
 		:return: the save file text
 		"""
+		self.update_graph_arcs()
 		text = "\n"
 		for i in self.nodes:
 			node = Node()
 			node.name = i.name
 			node.value = i.value
+			node.position = i.position
+			node.rotation = i.rotation
+			node.type = i.type
 			for a in i.arcs:
 				node.arcs.append(a.name)
 			text = text + "\n" + "@" + json.dumps(node.__dict__)

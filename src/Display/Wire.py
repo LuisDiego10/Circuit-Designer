@@ -1,3 +1,4 @@
+import random
 from typing import List, Any
 
 import pygame
@@ -6,19 +7,35 @@ from pygame.sprite import Group
 
 from graph import Node
 
-wire_image = pygame.image.load("resources/Red.png").convert()
-wire_image = pygame.transform.scale(wire_image, (10, 10))
-
 
 class Wire_node(pygame.sprite.Sprite):
-	def __init__(self, x, y, node, wire, *groups):
+	def __init__(self, x, y, node, wire, color, *groups):
 		super().__init__(*groups)
 		self.position = (x, y)
-		self.image = wire_image
+		self.selected = False
+		self.color = color
+		self.image = pygame.Surface((10, 10), pygame.SRCALPHA)
+		self.image.fill((0, 0, 0, 0))
+		pygame.draw.circle(self.image, color, (5, 5), 5)
+		pygame.draw.circle(self.image, tuple(int(i * 0.8) for i in self.color), (5, 5), 3)
 		self.rect = self.image.get_rect()
 		self.rect.center = self.position
 		self.node = node
 		self.wire = wire
+
+	def update(self, *args):
+		if self.selected:
+			self.selected = False
+			self.image = pygame.Surface((10, 10), pygame.SRCALPHA)
+			self.image.fill((0, 0, 0, 0))
+			pygame.draw.circle(self.image, self.color, (5, 5), 5)
+			pygame.draw.circle(self.image, tuple(int(i * 0.8) for i in self.color), (5, 5), 2)
+		else:
+			self.selected = True
+			self.image = pygame.Surface((10, 10), pygame.SRCALPHA)
+			self.image.fill((0, 0, 0, 0))
+			pygame.draw.circle(self.image, self.color, (5, 5), 5)
+			pygame.draw.circle(self.image, (250, 250, 250), (5, 5), 2)
 
 
 class Wire:
@@ -30,6 +47,7 @@ class Wire:
 		self.start = node
 		self.end = []
 		self.wires = []
+		self.color = tuple(random.randint(0, 220) for _ in range(3))
 		self.update_position()
 		print("asd")
 
@@ -44,10 +62,7 @@ class Wire:
 		y = y / (len(self.end) + 1)
 		x = x / (len(self.end) + 1)
 
-		self.wires.append(Wire_node(x, y, self.start, self))
-
-	def draw_start(self):
-		pygame.draw.line(self.screen, (220, 15, 15), self.start.position, self.wires[0].rect.center, 1)
+		self.wires.append(Wire_node(x, y, self.start, self, self.color))
 
 	def draw(self):
 		if len(self.end) == 0:
@@ -55,12 +70,19 @@ class Wire:
 		start = self.start
 		wire_connect = start.position
 		if start.type == 0:
-			wire_connect = (wire_connect[0] - 30 * math.sin(start.rotation * (math.pi / 2)),
-			                wire_connect[1] - 30 * math.cos(start.rotation * (math.pi / 2)))
-		pygame.draw.line(self.screen, (220, 15, 15), wire_connect, self.wires[0].rect.center, 2)
+			wire_connect = (wire_connect[0] - 25 * math.sin(start.rotation * (math.pi / 2)),
+			                wire_connect[1] - 25 * math.cos(start.rotation * (math.pi / 2)))
+		else:
+			if start.rotation % 2 == 1:
+				wire_connect = (wire_connect[0] - 1 * math.cos(start.rotation * (math.pi / 2)),
+				                wire_connect[1] - 50 * math.sin(start.rotation * (math.pi / 2)))
+			else:
+				wire_connect = (wire_connect[0] - 50 * math.cos(start.rotation * (math.pi / 2)),
+				                wire_connect[1] - 1 * math.sin(start.rotation * (math.pi / 2)))
+		pygame.draw.line(self.screen, self.color, wire_connect, self.wires[0].rect.center, 2)
 		actual = self.wires[0]
 		for i in self.wires[1:]:
-			pygame.draw.line(self.screen, (200, 20, 20), actual.rect.center, i.rect.center)
+			pygame.draw.line(self.screen, self.color, actual.rect.center, i.rect.center)
 			actual = i
 		for a in self.end:
 			distance = 10000
@@ -73,7 +95,14 @@ class Wire:
 			if a.type == 0:
 				wire_connect = (wire_connect[0] + 30 * math.sin(a.rotation * (math.pi / 2)),
 				                wire_connect[1] + 30 * math.cos(a.rotation * (math.pi / 2)))
-			pygame.draw.line(self.screen, (200, 20, 20), wire_connect, node.rect.center, 1)
+			else:
+				if a.rotation % 2 == 1:
+					wire_connect = (wire_connect[0] + 1 * math.cos(a.rotation * (math.pi / 2)),
+					                wire_connect[1] + 50 * math.sin(a.rotation * (math.pi / 2)))
+				else:
+					wire_connect = (wire_connect[0] + 50 * math.cos(a.rotation * (math.pi / 2)),
+					                wire_connect[1] + 1 * math.sin(a.rotation * (math.pi / 2)))
+			pygame.draw.line(self.screen, self.color, wire_connect, node.rect.center, 1)
 
 	def update_position(self):
 		for a in self.wires:

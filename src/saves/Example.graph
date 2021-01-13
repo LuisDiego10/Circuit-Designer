@@ -1,0 +1,9 @@
+
+
+@{"name": "Three", "value": 0, "arcs": ["Three", "one", "two"], "position": [320, 452], "rotation": 2, "type": 1}
+@{"name": "one", "value": 0, "arcs": ["one", "two"], "position": [250, 41], "rotation": 3, "type": 0}
+@{"name": "two", "value": 0, "arcs": ["Three", "one", "two"], "position": [120, 452], "rotation": 0, "type": 1}
+
+[1, 1, 1]
+[0, 1, 1]
+[1, 1, 1]
