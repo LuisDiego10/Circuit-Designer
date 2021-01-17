@@ -77,7 +77,7 @@ def run(displayed_graph: Graph):
 				# check for left click
 				if event.button == 1:
 					# check for new element
-					if new_element is not None:
+					if new_element is not None and mouse_x < 920:
 						for element in selected:
 							element.update()
 						selected.empty()

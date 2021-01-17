@@ -179,9 +179,10 @@ class Graph:
 		"""
 place holder for sort algorithms
 		"""
-		list_A = self.nodes
-		list_B = self.nodes
+		list_A = self.nodes.copy()
+		list_B = self.nodes.copy()
 		self.sorted_up = self.quicksort(list_A)
+		self.sorted_down = self.mergesort(list_B)
 		pass
 
 	def quicksort(self, list):
@@ -206,9 +207,104 @@ place holder for sort algorithms
 			firts.append(list[i])
 
 		return firts + second
-##
-"""TEST GRAPH"""
-##
+
+	# Function performs the comparisons and joins the elements to show the result
+	def merge(self, left, right):
+		result = []
+		i, j = 0, 0
+		while i < len(left) and j < len(right):
+			if left[i].name <= right[j].name:
+				result.append(left[i])
+				i += 1
+			else:
+				result.append(right[j])
+				j += 1
+		result += left[i:]
+		result += right[j:]
+		return result
+
+	# Function that divides the list and points to the middle
+	def mergesort(self, list):
+		if len(list) <= 1:
+			return list
+		mid = int(len(list) / 2)
+		left = self.mergesort(list[:mid])
+		right = self.mergesort(list[mid:])
+		return self.merge(left, right)
+
+	def dijkstra(self, group: []):
+		self.update_graph_arcs()
+		# group = group.sprites()
+		start = group[0]
+		end = group[1]
+		start_index = self.nodes.index(start)
+		end_index = self.nodes.index(end)
+		length = len(self.nodes)
+		dist = [1000] * length
+		paths_max = [[]] * length
+		paths_min = [[]] * length
+		dist[start_index] = 0
+		queue = []
+		for i in range(length):
+			queue.append(i)
+
+		while queue:
+			min = self.dijkstra_min(dist, queue)
+			queue.remove(min)
+			for i in range(length):
+				if self.paths[min][i] and i in queue:
+					if dist[min] + self.paths[min][i] < dist[i]:
+						dist[i] = dist[min] + self.paths[min][i]
+						paths_min[i] = paths_min[min] + [self.nodes[min]]
+
+		dist = [1] * length
+		dist[start_index] = 1000
+		queue = []
+
+		for i in range(length):
+			queue.append(i)
+
+		while queue:
+			max = self.dijkstra_max(dist, queue)
+			queue.remove(max)
+			for i in range(length):
+				if self.paths[max][i] and i in queue:
+					if dist[max] + self.paths[max][i] > dist[i]:
+						dist[i] = dist[max] + self.paths[max][i]
+						paths_max[i] = paths_max[max] + [self.nodes[max]]
+
+		return paths_min[end_index], paths_max[end_index]
+
+	def dijkstra_max(self, dist, queue):
+		# Initialize min value and min_index as -1
+		max = -1
+		max_index = -1
+
+		# from the dist array,pick one which
+		# has min value and is till in queue
+		for i in range(len(dist)):
+			if (dist[i] > max) and (i in queue):
+				max = dist[i]
+				max_index = i
+		return max_index
+		pass
+
+	def dijkstra_min(self, dist, queue):
+		# Initialize min value and min_index as -1
+		minimum = float("Inf")
+		min_index = -1
+
+		# from the dist array,pick one which
+		# has min value and is till in queue
+		for i in range(len(dist)):
+			if (dist[i] < minimum) and (i in queue):
+				minimum = dist[i]
+				min_index = i
+		return min_index
+		pass
+
+#
+# """TEST GRAPH"""
 #
 # graph = Graph()
 #
@@ -238,6 +334,8 @@ place holder for sort algorithms
 # graph.new_arc("two", "one")
 # graph.new_arc(node3, "one")
 # graph.new_arc(node3, node2)
+# graph.new_arc(node2, node4)
+# graph.new_arc(node4, node1)
 # graph.new_arc(node5, "one")
 # graph.new_arc(node5, "five")
 #
@@ -245,6 +343,18 @@ place holder for sort algorithms
 # print(graph.graph_dump("graph one"))
 # graph.graph_load("saves/graph one.graph")
 # print(graph.graph_dump("graph one"))
+# a, b = graph.dijkstra([node3, node1])
+# print("a")
+# print(a)
+# print("b")
+# print(b)
+# for i in b:
+# 	for n in i:
+# 		print(i[0].name)
+# 		print("ASD")
+# for i in a:
+# 	print(i.name)
+# 	print("A D")
 #
 # ##
 # # one connect to two
