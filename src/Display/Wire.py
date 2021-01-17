@@ -49,6 +49,8 @@ class Wire:
 		self.wires = []
 		self.color = tuple(random.randint(0, 220) for _ in range(3))
 		self.update_position()
+		self.voltage = random.randint(0, 10)
+		self.amps = random.randint(0, 1000)
 		print("asd")
 
 	def standar_deviation(self):
