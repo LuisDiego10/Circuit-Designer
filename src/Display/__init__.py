@@ -201,10 +201,14 @@ battery_select_edit = pygame.image.load("resources/battery_Selection_edit.png").
 battery_select_edit = pygame.transform.scale(battery_select_edit, (100, 60))
 battery_select_edit.set_colorkey((0, 0, 0))
 
-import_edit = pygame.image.load("resources/Import.png").convert()
+import_edit = pygame.image.load("resources/Import (2).png").convert()
 import_edit = pygame.transform.scale(import_edit, (100, 60))
-import_edit.set_colorkey((0, 0, 0))
+import_edit.set_colorkey((255, 255, 255))
 
-export_edit = pygame.image.load("resources/Export.png").convert()
+export_edit = pygame.image.load("resources/Export (2).png").convert()
 export_edit = pygame.transform.scale(export_edit, (100, 60))
 export_edit.set_colorkey((0, 0, 0))
+
+delete = pygame.image.load("resources/delete.png").convert()
+delete = pygame.transform.scale(delete, (100, 60))
+delete.set_colorkey((255, 255, 255))

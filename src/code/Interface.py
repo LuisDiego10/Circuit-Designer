@@ -46,7 +46,8 @@ def run(displayed_graph: Graph):
 	resistance_button_edit = Display.Button(Display.resistance_edit, Display.resistance_select_edit, 1065, 350, buttons)
 	battery_button_edit = Display.Button(Display.battery_edit, Display.battery_select_edit, 1065, 470, buttons)
 	import_button_edit = Display.Button(Display.import_edit, Display.import_edit, 1010, 100, buttons)
-	export_button_edit = Display.Button(Display.export_edit, Display.export_edit, 1125, 100, buttons)
+	export_button_edit = Display.Button(Display.export_edit, Display.export_edit, 1125, 105, buttons)
+	delete_button_edit = Display.Button(Display.delete, Display.delete, 1065, 570, buttons)
 
 	old_mouse_x, old_mouse_y = (0, 0)
 	new_element: Node or None = None
