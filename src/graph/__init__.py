@@ -233,18 +233,18 @@ place holder for sort algorithms
 		return self.merge(left, right)
 
 	def dijkstra(self, group: []):
-		self.update_graph_arcs()
-		# group = group.sprites()
 		start = group[0]
 		end = group[1]
+		# the position of the end and the start has importance because it is a Directed Graph:
 		start_index = self.nodes.index(start)
 		end_index = self.nodes.index(end)
 		length = len(self.nodes)
 		dist = [1000] * length
-		paths_max = [[]] * length
 		paths_min = [[]] * length
 		dist[start_index] = 0
 		queue = []
+
+		# get a id for all the nodes with their position in list
 		for i in range(length):
 			queue.append(i)
 
@@ -256,46 +256,12 @@ place holder for sort algorithms
 					if dist[min] + self.paths[min][i] < dist[i]:
 						dist[i] = dist[min] + self.paths[min][i]
 						paths_min[i] = paths_min[min] + [self.nodes[min]]
-
-		dist = [1] * length
-		dist[start_index] = 1000
-		queue = []
-
-		for i in range(length):
-			queue.append(i)
-
-		while queue:
-			max = self.dijkstra_max(dist, queue)
-			queue.remove(max)
-			for i in range(length):
-				if self.paths[max][i] and i in queue:
-					if dist[max] + self.paths[max][i] > dist[i]:
-						dist[i] = dist[max] + self.paths[max][i]
-						paths_max[i] = paths_max[max] + [self.nodes[max]]
-
-		return paths_min[end_index], paths_max[end_index]
-
-	def dijkstra_max(self, dist, queue):
-		# Initialize min value and min_index as -1
-		max = -1
-		max_index = -1
-
-		# from the dist array,pick one which
-		# has min value and is till in queue
-		for i in range(len(dist)):
-			if (dist[i] > max) and (i in queue):
-				max = dist[i]
-				max_index = i
-		return max_index
-		pass
+		return paths_min[end_index]
 
 	def dijkstra_min(self, dist, queue):
-		# Initialize min value and min_index as -1
-		minimum = float("Inf")
+		minimum = 10000
 		min_index = -1
-
-		# from the dist array,pick one which
-		# has min value and is till in queue
+		# chose the minimum element
 		for i in range(len(dist)):
 			if (dist[i] < minimum) and (i in queue):
 				minimum = dist[i]
@@ -343,15 +309,9 @@ place holder for sort algorithms
 # print(graph.graph_dump("graph one"))
 # graph.graph_load("saves/graph one.graph")
 # print(graph.graph_dump("graph one"))
-# a, b = graph.dijkstra([node3, node1])
+# a = graph.dijkstra([node3, node1])
 # print("a")
 # print(a)
-# print("b")
-# print(b)
-# for i in b:
-# 	for n in i:
-# 		print(i[0].name)
-# 		print("ASD")
 # for i in a:
 # 	print(i.name)
 # 	print("A D")

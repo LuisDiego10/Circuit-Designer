@@ -95,6 +95,7 @@ def run(displayed_graph: Graph):
 					if simulation_button.rect.collidepoint(mouse_x, mouse_y):
 						simulation_button.update()
 						new_element = None
+
 						continue
 
 					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y):
