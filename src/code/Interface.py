@@ -3,6 +3,7 @@ import tkinter
 from tkinter import *
 
 import pygame
+import copy
 from pygame.sprite import Group
 
 pygame.init()
@@ -30,6 +31,21 @@ def add_node(node: Node, node_group: Group, wire: Group):
 	node_group.add(node_display)
 
 
+def update_matrix(node_group: Group):
+	graph.voltage_matrix = copy.deepcopy(graph.paths)
+	graph.amperage_matrix = copy.deepcopy(graph.paths)
+	for i in node_group.sprites():
+
+		index = graph.nodes.index(i.node)
+		for a in range(len(graph.voltage_matrix[index])):
+			if graph.voltage_matrix[index][a] > 0:
+				graph.voltage_matrix[index][a] = i.wire.voltage
+		for a in range(len(graph.amperage_matrix[index])):
+			if graph.amperage_matrix[index][a] > 0:
+				graph.amperage_matrix[index][a] = i.wire.amps
+		pass
+
+
 def run(displayed_graph: Graph):
 	done = False
 	clock = pygame.time.Clock()
@@ -51,6 +67,8 @@ def run(displayed_graph: Graph):
 
 	old_mouse_x, old_mouse_y = (0, 0)
 	new_element: Node or None = None
+	init_simulation: bool = False
+	nodes_search = []
 
 	while not done:
 		screen.blit(background, [0, 0])
@@ -66,11 +84,45 @@ def run(displayed_graph: Graph):
 		buttons.draw(screen)
 		selected.draw(screen)
 		cable.draw(screen)
-
 		for a in nodes:
 			a.wire.draw()
 
+		if init_simulation:
+			for a in nodes:
+				a.name_tag(screen)
+				if a.rect.collidepoint(mouse_x, mouse_y):
+					try:
+						screen.blit(
+						pygame.font.Font('freesansbold.ttf', 16).render(
+							("mA:" + str(a.wire.amps) + "\n" + "V" + str(a.wire.voltage)), True,
+							(211, 210, 200)), a.wire.wires[0].rect.center)
+					except Exception:
+						print("No wire")
+
+			if len(selected.sprites()) == 2 and len(nodes_search) == 0:
+				sprites = []
+				for a in selected.sprites():
+					if a.__class__ == Node_visualization:
+						sprites.append(a)
+				if len(sprites) == 2:
+					try:
+						nodes_search = graph.dijkstra([sprites[0].node, sprites[1].node], graph.voltage_matrix)
+						nodes_search.append(sprites[1].node)
+					except Exception as e:
+						print(e)
+				print(nodes_search)
+			if len(selected.sprites()) != 2:
+				nodes_search = []
+			for a in range(len(nodes_search) - 1):
+				for b in nodes:
+					if b.node == nodes_search[a]:
+						try:
+							b.wire.draw_underline((0, 100, 100), graph_node=nodes_search[a + 1])
+						except Exception as e:
+							print("error while underlining the wire:")
+							print(e)
 		for event in pygame.event.get():
+
 			if event.type == pygame.QUIT:
 				done = True
 			# Checking if user clicks
@@ -78,7 +130,7 @@ def run(displayed_graph: Graph):
 				# check for left click
 				if event.button == 1:
 					# check for new element
-					if new_element is not None and mouse_x < 920:
+					if new_element is not None and mouse_x < 920 and not init_simulation:
 						for element in selected:
 							element.update()
 						selected.empty()
@@ -90,22 +142,33 @@ def run(displayed_graph: Graph):
 						graph.insert_node(new_element)
 						add_node(new_element, nodes, cable)
 						new_element = None
+						node_edit_mode.refresh()
+						update_matrix(nodes)
 
 					# check for button selection
 					if simulation_button.rect.collidepoint(mouse_x, mouse_y):
+						graph.update_graph_arcs()
+						graph.update_node_arcs()
+						update_matrix(nodes)
 						simulation_button.update()
+						for element in selected:
+							element.update()
+						selected.empty()
 						new_element = None
-
+						if init_simulation:
+							init_simulation = False
+						else:
+							init_simulation = True
 						continue
 
-					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y):
+					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y)and not init_simulation:
 						resistance_button_edit.update()
 						new_element = Node()
 						new_element.type = 1
 						new_element.set_name("resistance" + str(random.randint(0, 500)))
 						continue
 
-					if battery_button_edit.rect.collidepoint(mouse_x, mouse_y):
+					if battery_button_edit.rect.collidepoint(mouse_x, mouse_y)and not init_simulation:
 						battery_button_edit.update()
 						new_element = Node()
 						new_element.type = 0
@@ -204,7 +267,12 @@ graph.insert_node(node3)
 
 graph.new_arc(node2, node1)
 graph.new_arc(node3, node1)
+graph.new_arc(node1, node3)
 graph.new_arc(node3, node2)
+
+# modify the graph to adapt
+graph.voltage_matrix = []
+graph.amperage_matrix = []
 
 run(graph)
 exit()

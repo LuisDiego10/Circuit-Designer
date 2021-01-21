@@ -47,6 +47,12 @@ class Node_visualization(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.center = rect_postion
 
+	def name_tag(self, screen):
+		screen.blit(
+			pygame.font.Font('freesansbold.ttf', 16).render(self.node.name, True,
+			                                                (200, 200, 200)),
+			(self.rect.center[0], self.rect.center[1] + 50))
+
 
 class Button(pygame.sprite.Sprite):
 	def __init__(self, img1, img2, x, y, *groups):

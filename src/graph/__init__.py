@@ -232,14 +232,16 @@ place holder for sort algorithms
 		right = self.mergesort(list[mid:])
 		return self.merge(left, right)
 
-	def dijkstra(self, group: []):
+	def dijkstra(self, group: [], matrix=None):
+		if matrix is None:
+			matrix = self.paths
 		start = group[0]
 		end = group[1]
 		# the position of the end and the start has importance because it is a Directed Graph:
 		start_index = self.nodes.index(start)
 		end_index = self.nodes.index(end)
 		length = len(self.nodes)
-		dist = [1000] * length
+		dist = [10000] * length
 		paths_min = [[]] * length
 		dist[start_index] = 0
 		queue = []
@@ -249,17 +251,19 @@ place holder for sort algorithms
 			queue.append(i)
 
 		while queue:
+			# select the minimum weight and add path
 			min = self.dijkstra_min(dist, queue)
 			queue.remove(min)
 			for i in range(length):
-				if self.paths[min][i] and i in queue:
-					if dist[min] + self.paths[min][i] < dist[i]:
-						dist[i] = dist[min] + self.paths[min][i]
+				if matrix[min][i] > 0 and i in queue:
+					if dist[min] + matrix[min][i] < dist[i]:
+						dist[i] = dist[min] + matrix[min][i]
 						paths_min[i] = paths_min[min] + [self.nodes[min]]
+			print(paths_min)
 		return paths_min[end_index]
 
 	def dijkstra_min(self, dist, queue):
-		minimum = 10000
+		minimum = 100000
 		min_index = -1
 		# chose the minimum element
 		for i in range(len(dist)):
@@ -297,18 +301,18 @@ place holder for sort algorithms
 # graph.new_arc(node1, "two")
 # graph.new_arc("two", "one")
 # graph.del_arc("two", "one")
-# graph.new_arc("two", "one")
-# graph.new_arc(node3, "one")
+# # graph.new_arc("two", "one")
+# # graph.new_arc(node3, "one")
 # graph.new_arc(node3, node2)
 # graph.new_arc(node2, node4)
 # graph.new_arc(node4, node1)
 # graph.new_arc(node5, "one")
 # graph.new_arc(node5, "five")
 #
-# print(graph.__dict__)
-# print(graph.graph_dump("graph one"))
-# graph.graph_load("saves/graph one.graph")
-# print(graph.graph_dump("graph one"))
+# # print(graph.__dict__)
+# # print(graph.graph_dump("graph one"))
+# # graph.graph_load("saves/graph one.graph")
+# # print(graph.graph_dump("graph one"))
 # a = graph.dijkstra([node3, node1])
 # print("a")
 # print(a)

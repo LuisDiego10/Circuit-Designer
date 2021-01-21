@@ -1,0 +1,13 @@
+
+
+@{"name": "one", "value": 0, "arcs": ["two"], "position": [0, 0], "rotation": 0, "type": 0}
+@{"name": "two", "value": 0, "arcs": ["one", "fourth"], "position": [0, 0], "rotation": 0, "type": 0}
+@{"name": "Three", "value": 0, "arcs": ["one", "two"], "position": [0, 0], "rotation": 0, "type": 0}
+@{"name": "fourth", "value": 0, "arcs": ["one"], "position": [0, 0], "rotation": 0, "type": 0}
+@{"name": "five", "value": 0, "arcs": ["one", "five"], "position": [0, 0], "rotation": 0, "type": 0}
+
+[0, 1, 0, 0, 0]
+[1, 0, 0, 1, 0]
+[1, 1, 0, 0, 0]
+[1, 0, 0, 0, 0]
+[1, 0, 0, 0, 1]
