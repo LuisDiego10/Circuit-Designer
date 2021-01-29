@@ -1,10 +1,5 @@
-import threading
-import tkinter
-from tkinter import *
-
-import pygame
 import copy
-from pygame.sprite import Group
+import pygame
 
 pygame.init()
 weight = 1200
