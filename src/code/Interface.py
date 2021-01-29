@@ -226,6 +226,18 @@ def run(displayed_graph: Graph):
 						if node.rect.collidepoint(mouse_x, mouse_y):
 							node_edit_mode.node(node)
 							break
+					for wire_node in cable:
+						if wire_node.rect.collidepoint(mouse_x, mouse_y):
+							wire = wire_node.wire
+							if wire.wires[-1] == wire_node:
+								wire.wires.append(
+									Wire_node(wire_node.position[0] + 15, wire_node.position[1] + 15, wire_node.node,
+									          wire, wire_node.color, cable))
+							else:
+								index = wire.wires.index(wire_node)
+								wire.wires = wire.wires[:index+1] + [
+									Wire_node(wire_node.position[0] + 15, wire_node.position[1] + 15, wire_node.node,
+									          wire, wire_node.color, cable)] + wire.wires[index+1:]
 					continue
 
 			# move selected Nodes
@@ -237,6 +249,7 @@ def run(displayed_graph: Graph):
 						if a.__class__ == Display.Wire_node:
 							try:
 								a.wire.wires[a.wire.wires.index(a)].position = a.rect.center
+								a.wire.wires[a.wire.wires.index(a)].rect.center = a.rect.center
 							except ValueError:
 								cable.remove(a)
 

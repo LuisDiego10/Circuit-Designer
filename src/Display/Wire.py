@@ -87,24 +87,25 @@ class Wire:
 			pygame.draw.line(self.screen, self.color, actual.rect.center, i.rect.center, 1)
 			actual = i
 		for a in self.end:
-			distance = 10000
+			distance = 100000
 			node = ""
+			end_connect = a.position
 			for b in self.wires:
-				d = ((a.position[0] + b.rect.center[0]) ** 2 + (a.position[1] + b.rect.center[1]) ** 2) ** 0.5
+				d = ((a.position[0] - b.rect.center[0]) ** 2 + (a.position[1] - b.rect.center[1]) ** 2) ** 0.5
 				if d < distance:
 					node = b
-			wire_connect = a.position
+					distance = d
 			if a.type == 0:
-				wire_connect = (wire_connect[0] + 30 * math.sin(a.rotation * (math.pi / 2)),
-				                wire_connect[1] + 30 * math.cos(a.rotation * (math.pi / 2)))
+				end_connect = (end_connect[0] + 30 * math.sin(a.rotation * (math.pi / 2)),
+				               end_connect[1] + 30 * math.cos(a.rotation * (math.pi / 2)))
 			else:
 				if a.rotation % 2 == 1:
-					wire_connect = (wire_connect[0] + 1 * math.cos(a.rotation * (math.pi / 2)),
-					                wire_connect[1] + 50 * math.sin(a.rotation * (math.pi / 2)))
+					end_connect = (end_connect[0] + 1 * math.cos(a.rotation * (math.pi / 2)),
+					               end_connect[1] + 50 * math.sin(a.rotation * (math.pi / 2)))
 				else:
-					wire_connect = (wire_connect[0] + 50 * math.cos(a.rotation * (math.pi / 2)),
-					                wire_connect[1] + 1 * math.sin(a.rotation * (math.pi / 2)))
-			pygame.draw.line(self.screen, self.color, wire_connect, node.rect.center, 1)
+					end_connect = (end_connect[0] + 50 * math.cos(a.rotation * (math.pi / 2)),
+					               end_connect[1] + 1 * math.sin(a.rotation * (math.pi / 2)))
+			pygame.draw.line(self.screen, self.color, end_connect, node.rect.center, 1)
 
 	def update_position(self):
 		for a in self.wires:
