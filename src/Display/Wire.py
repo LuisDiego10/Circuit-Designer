@@ -66,7 +66,7 @@ class Wire:
 
 		self.wires.append(Wire_node(x, y, self.start, self, self.color))
 
-	def draw(self, color=None):
+	def draw(self):
 		if len(self.end) == 0:
 			return
 		start = self.start

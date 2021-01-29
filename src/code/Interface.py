@@ -93,9 +93,9 @@ def run(displayed_graph: Graph):
 				if a.rect.collidepoint(mouse_x, mouse_y):
 					try:
 						screen.blit(
-						pygame.font.Font('freesansbold.ttf', 16).render(
-							("mA:" + str(a.wire.amps) + "\n" + "V" + str(a.wire.voltage)), True,
-							(211, 210, 200)), a.wire.wires[0].rect.center)
+							pygame.font.Font('freesansbold.ttf', 16).render(
+								("mA:" + str(a.wire.amps) + "\n" + "V" + str(a.wire.voltage)), True,
+								(211, 210, 200)), a.wire.wires[0].rect.center)
 					except Exception:
 						print("No wire")
 
@@ -161,18 +161,31 @@ def run(displayed_graph: Graph):
 							init_simulation = True
 						continue
 
-					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y)and not init_simulation:
+					if resistance_button_edit.rect.collidepoint(mouse_x, mouse_y) and not init_simulation:
 						resistance_button_edit.update()
 						new_element = Node()
 						new_element.type = 1
 						new_element.set_name("resistance" + str(random.randint(0, 500)))
 						continue
 
-					if battery_button_edit.rect.collidepoint(mouse_x, mouse_y)and not init_simulation:
+					if battery_button_edit.rect.collidepoint(mouse_x, mouse_y) and not init_simulation:
 						battery_button_edit.update()
 						new_element = Node()
 						new_element.type = 0
 						new_element.set_name("battery" + str(random.randint(0, 500)))
+						continue
+
+					if delete_button_edit.rect.collidepoint(mouse_x, mouse_y) and not init_simulation:
+						delete_button_edit.update()
+						for node in selected:
+							cable.remove(node.wire.wires)
+							graph.del_node(node.node)
+							nodes.remove(node)
+							selected.remove(node)
+							graph.update_node_arcs()
+							node_edit_mode.refresh()
+						for node in nodes:
+							node.wire.update_position()
 						continue
 
 					if import_button_edit.rect.collidepoint(mouse_x, mouse_y):
@@ -214,10 +227,10 @@ def run(displayed_graph: Graph):
 
 				# check for right click
 				elif event.button == 3:
-					print(graph.nodes[0].__dict__)
 					for node in nodes:
 						if node.rect.collidepoint(mouse_x, mouse_y):
 							node_edit_mode.node(node)
+							break
 					continue
 
 			# move selected Nodes
