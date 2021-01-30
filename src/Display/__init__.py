@@ -175,7 +175,7 @@ class Edit_node_screen(threading.Thread):
 			row += 1
 		row = 2
 		tkinter.Label(text="DOWN").grid(column=3, row=1)
-		for node in self.graph.nodes:
+		for node in self.graph.sorted_down:
 			tkinter.Button(text=node.name, height="2", width="30",
 			               command=partial(self.node, node)).grid(column=3, row=row)
 			row += 1
