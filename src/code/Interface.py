@@ -193,7 +193,7 @@ def run(displayed_graph: Graph):
 
 						nodes = update_nodes(nodes, graph, cable)
 					if export_button_edit.rect.collidepoint(mouse_x, mouse_y):
-						graph.graph_dump("Example")
+						graph.graph_dump(node_edit_mode.text.get())
 
 					# check for Node selection
 					for node in nodes:

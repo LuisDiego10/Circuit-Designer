@@ -80,6 +80,8 @@ class Edit_node_screen(threading.Thread):
 		self.graph = graph
 		self.nodes = nodes
 
+
+
 	def edit_node(self, node, name, value, arcs: str, graph, screen=0, node_vis=None):
 		node.set_name(name)
 		node.set_value(value)
@@ -101,8 +103,10 @@ class Edit_node_screen(threading.Thread):
 		# self.main_window.overrideredirect(True)
 		self.main_window.bind("<Unmap>", self.main_window.focus_force())
 		self.main_window.bind("<Map>", self.main_window.focus_force())
-		self.main_window.geometry("400x300")
+		self.main_window.geometry("550x300")
 		self.main_window.title("Nodes")
+		self.text = StringVar()
+		self.text.set("Example")
 		self.refresh()
 
 		self.main_window.mainloop()
@@ -161,14 +165,16 @@ class Edit_node_screen(threading.Thread):
 		for child in self.main_window.winfo_children():
 			child.destroy()
 		self.graph.sort()
-		row = 1
-		tkinter.Label(text="UP").grid(column=1, row=0)
+		row = 2
+		tkinter.Label(text="Graph name").grid(column=2, row=1)
+		tkinter.Entry(textvariable=self.text).grid(column=2, row=0)
+		tkinter.Label(text="UP").grid(column=1, row=1)
 		for node in self.graph.sorted_up:
 			tkinter.Button(text=node.name, height="2", width="30",
 			               command=partial(self.node, node)).grid(column=1, row=row)
 			row += 1
-		row = 1
-		tkinter.Label(text="DOWN").grid(column=3, row=0)
+		row = 2
+		tkinter.Label(text="DOWN").grid(column=3, row=1)
 		for node in self.graph.nodes:
 			tkinter.Button(text=node.name, height="2", width="30",
 			               command=partial(self.node, node)).grid(column=3, row=row)
