@@ -183,6 +183,13 @@ place holder for sort algorithms
 		list_B = self.nodes.copy()
 		self.sorted_up = self.quicksort(list_A)
 		self.sorted_down = self.mergesort(list_B)
+		self.sorted_down
+		for a in self.sorted_up:
+			print(a.name)
+
+		print("\n")
+		for a in self.sorted_down:
+			print(a.name)
 		pass
 
 	def quicksort(self, list):
@@ -213,7 +220,7 @@ place holder for sort algorithms
 		result = []
 		i, j = 0, 0
 		while i < len(left) and j < len(right):
-			if left[i].name <= right[j].name:
+			if left[i].name > right[j].name:
 				result.append(left[i])
 				i += 1
 			else:
